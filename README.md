@@ -2,6 +2,8 @@
 
 用 YOLOv3 模型在一个开源的人手检测数据集 [oxford hand](http://www.robots.ox.ac.uk/~vgg/data/hands/) 上做人手检测，并在此基础上进行实现模型压缩与加速。对于该数据集，对 YOLOv3 进行 channel pruning 之后，模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。
 
+感兴趣的可以给个 star :star2:，也欢迎提 Issue 一起讨论 :smile:
+
 ## 环境
 
 Python3.6, Pytorch 1.0及以上
