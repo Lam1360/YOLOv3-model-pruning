@@ -8,6 +8,8 @@ Python3.6, Pytorch 1.0及以上
 
 代码的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) ，因此代码的依赖环境可参考其 repo
 
+*目前部分代码还在修改和完善，最近比较忙，待整理好再发出来，可以自己先试着按照下面给出的论文自己复现*
+
 ## 数据集准备
 
 1. 下载[数据集](http://www.robots.ox.ac.uk/~vgg/data/hands/downloads/hand_dataset.tar.gz)，得到压缩文件
@@ -27,7 +29,7 @@ python train.py --model_def config/yolov3-hand.cfg
 
 ### 剪枝算法的步骤
 
-1. 进行稀疏化训练（目前只支持YOLOv3，部分代码还在修改和完善，最近比较忙，待整理好再发出来，不过按照论文自己也能复现个七八成）
+1. 进行稀疏化训练
 
    ```bash
    python train.py --model_def config/yolov3-hand.cfg -sr --s 0.01
