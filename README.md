@@ -40,38 +40,42 @@ python train.py --model_def config/yolov3-hand.cfg
 3. 对剪枝后的模型进行微调（本项目对原算法进行了改进，即使不用微调也能达到较高的 mAP）
 
    ```bash
-   python train.py --model_def config/prune_yolov3-hand.cfg --pretrained_weights checkpoints/prune_yolov3_ckpt_n.pth
+   python train.py --model_def config/prune_yolov3-hand.cfg -pre checkpoints/prune_yolov3_ckpt.pth
    ```
 
-### 稀疏训练的过程
+### 稀疏训练过程的可视化
 
-取出所有 BN 的 gamma 系数，进行排序得到的五个五分位点随时间的变化图，可以看到 10 次迭代后，60%的 gamma 系数已趋向于 0，40 次迭代后 80% 的 gamma 系数已趋向于 0
+1. 所有 BN 的 gamma 系数的五个五分位点随时间的变化图：
 
-![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202900.png)
+   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202900.png)
+   > 可以看到 10 次迭代后，60%的 gamma 系数已趋向于 0，40 次迭代后 80% 的 gamma 系数已趋向于 0
 
-YOLOv3中的某个 BN 层的 gamma 系数随迭代次数的变化情况，可以看到部分 gamma 系数逐步趋向于 0（表明其重要性逐渐削弱），而部分 gamma 系数能够保持其权重（表明其对网络的输出有一定的重要性）
+2. YOLOv3中第一个 BN 层的 gamma 系数随迭代次数的变化情况：
 
-![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202755.png)
+   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202755.png)
+   > 可以看到部分 gamma 系数逐步趋向于 0（表明其重要性逐渐削弱），而部分 gamma 系数能够保持其权重（表明其对网络的输出有一定的重要性）
 
-所有 BN 的 gamma 系数的分布随迭代次数的变化，可以看到分布的重心逐渐向 0 靠近，表明 gamma 系数逐渐变得稀疏
+3. 所有 BN 的 gamma 系数的分布随迭代次数的变化：
 
-![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628203732.png)
+   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628203732.png)
+   > 可以看到分布的重心逐渐向 0 靠近，表明 gamma 系数逐渐变得稀疏
 
-### 剪枝过程
+### 剪枝前后的对比
 
-下图为设定合理阈值进行剪枝前后通道数的变化，可以看到部分通道直接从 1024 剪到剩下两位数
+1. 下图为设定合理阈值进行剪枝前后通道数的变化：
 
-![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628205342.png)
+   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628205342.png)
+   > 可以看到部分卷积层的通道数大幅度减少
 
-剪枝前后指标对比:
+2. 剪枝前后指标对比:
 
-|          | Parameters | Flops | Forward time（RTX 2070 TI） | mAP    |
-| -------- | ---------- | ----- | --------------------------- | ------ |
-| Baseline | 61.5M      | 32.8B | 15.0 ms                     | 0.7692 |
-| Prune    | 10.9M      | 9.6B  | 7.7 ms                      | 0.7722 |
-| Finetune | 同上       | 同上  | 同上                        | 0.7750 |
+   |          | Parameters | Flops | Forward time（RTX 2070 TI） | mAP    |
+   | -------- | ---------- | ----- | --------------------------- | ------ |
+   | Baseline | 61.5M      | 32.8B | 15.0 ms                     | 0.7692 |
+   | Prune    | 10.9M      | 9.6B  | 7.7 ms                      | 0.7722 |
+   | Finetune | 同上       | 同上  | 同上                        | 0.7750 |
 
-可以看到，加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致，将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。
+   > 可以看到，加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致。将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。
 
 ## Contact
 
