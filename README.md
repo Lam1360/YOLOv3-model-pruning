@@ -15,7 +15,7 @@ Pytorch 1.0+
 
 ## 正常训练（Baseline）
 
-```python
+```bash
 python train.py --model_def config/yolov3-hand.cfg
 ```
 
