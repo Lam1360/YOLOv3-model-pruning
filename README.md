@@ -8,7 +8,7 @@ Python3.6, Pytorch 1.0及以上
 
 代码的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) ，因此代码的依赖环境可参考其 repo
 
-*目前部分代码还在修改和完善，最近比较忙，待整理好再发出来，可以自己先试着按照下面给出的论文自己复现*
+*目前部分代码还在修改和完善，最近比较忙，待整理好再发出来，不过按照下面给出的论文进行复现也不会很难*
 
 ## 数据集准备
 
