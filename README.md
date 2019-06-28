@@ -48,24 +48,24 @@ python train.py --model_def config/yolov3-hand.cfg
 1. 所有 BN 的 gamma 系数的五个五分位点随时间的变化图：
 
    ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202900.png)
-   > 可以看到 10 次迭代后，60%的 gamma 系数已趋向于 0，40 次迭代后 80% 的 gamma 系数已趋向于 0
+   > 经过 10 次迭代后，60%的 gamma 系数已趋向于 0，40 次迭代后 80% 的 gamma 系数已趋向于 0
 
 2. YOLOv3中第一个 BN 层的 gamma 系数随迭代次数的变化情况：
 
    ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202755.png)
-   > 可以看到部分 gamma 系数逐步趋向于 0（表明其重要性逐渐削弱），而部分 gamma 系数能够保持其权重（表明其对网络的输出有一定的重要性）
+   > 随着模型的更新，部分 gamma 系数逐步趋向于 0（表明其重要性逐渐削弱），而部分 gamma 系数能够保持其权重（表明其对网络的输出有一定的重要性）
 
 3. 所有 BN 的 gamma 系数的分布随迭代次数的变化：
 
    ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628203732.png)
-   > 可以看到分布的重心逐渐向 0 靠近，表明 gamma 系数逐渐变得稀疏
+   > 分布的重心逐渐向 0 靠近，但并没有全部衰减为 0，表明 gamma 系数逐渐变得稀疏
 
 ### 剪枝前后的对比
 
 1. 下图为设定合理阈值进行剪枝前后通道数的变化：
 
    ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628205342.png)
-   > 可以看到部分卷积层的通道数大幅度减少
+   > 部分卷积层的通道数大幅度减少
 
 2. 剪枝前后指标对比:
 
@@ -75,7 +75,7 @@ python train.py --model_def config/yolov3-hand.cfg
    | Prune    | 10.9M      | 9.6B  | 7.7 ms                      | 0.7722 |
    | Finetune | 同上       | 同上  | 同上                        | 0.7750 |
 
-   > 可以看到，加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致。将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。
+   > 加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致。将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。
 
 ## Contact
 
