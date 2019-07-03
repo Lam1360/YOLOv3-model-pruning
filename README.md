@@ -1,6 +1,6 @@
 # YOLOv3-model-pruning
 
-用 YOLOv3 模型在一个开源的人手检测数据集 [oxford hand](http://www.robots.ox.ac.uk/~vgg/data/hands/) 上做人手检测，并在此基础上做模型剪枝。对于该数据集，对 YOLOv3 进行 channel pruning 之后，模型的参数量、模型大小减少 80% ，FLOPs 降低 70%，前向推断的速度可以达到原来的 200%，同时可以保持 mAP 基本不变（可以参照后面的表格）。
+用 YOLOv3 模型在一个开源的人手检测数据集 [oxford hand](http://www.robots.ox.ac.uk/~vgg/data/hands/) 上做人手检测，并在此基础上做模型剪枝。对于该数据集，对 YOLOv3 进行 channel pruning 之后，模型的参数量、模型大小减少 80% ，FLOPs 降低 70%，前向推断的速度可以达到原来的 200%，同时可以保持 mAP 基本不变（可以参照后面的表格，后面有时间的话会在其他数据集上测试模型剪枝的效果）。
 
 感兴趣的可以给个 star :star2:，也欢迎提 Issue 一起讨论 :smile:
 
@@ -10,7 +10,7 @@ Python3.6, Pytorch 1.0及以上
 
 YOLOv3 的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) ，因此代码的依赖环境也可以参考其 repo
 
-*目前部分代码(如prune_utils.py文件)还在修改和完善，最近比较忙，待整理好再发出来，不过按照下面给出的论文进行复现也不会很难*
+*目前部分代码(如prune_utils.py文件)还在修改和完善，最近比较忙，待整理好再发出来*
 
 ## 数据集准备
 
