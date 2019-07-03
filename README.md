@@ -64,7 +64,7 @@ python train.py --model_def config/yolov3-hand.cfg
 
 ### 剪枝前后的对比
 
-1. 下图为设定合理阈值进行剪枝前后通道数的变化：
+1. 下图为对部分卷积层进行剪枝前后通道数的变化：
 
    ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628205342.png)
    > 部分卷积层的通道数大幅度减少
