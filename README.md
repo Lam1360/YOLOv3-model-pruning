@@ -39,7 +39,7 @@ python train.py --model_def config/yolov3-hand.cfg
 
 2. 基于 test_prune.py 文件进行剪枝（通过设定合理的剪枝规则），得到剪枝后的模型
 
-3. 对剪枝后的模型进行微调（本项目对原算法进行了改进，即使不用微调也能达到较高的 mAP）
+3. 对剪枝后的模型进行微调（本项目对原算法进行了改进，实验过程中发现即使不经过微调也能达到较高的 mAP）
 
    ```bash
    python train.py --model_def config/prune_yolov3-hand.cfg -pre checkpoints/prune_yolov3_ckpt.pth
