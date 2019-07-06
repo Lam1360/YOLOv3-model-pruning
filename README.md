@@ -27,7 +27,7 @@ python train.py --model_def config/yolov3-hand.cfg
 
 ## 剪枝算法介绍
 
-本代码基于论文 [Learning Efficient Convolutional Networks Through Network Slimming (ICCV 2017)](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html) 进行改进实现的 channel pruning算法。原始论文中的算法是针对分类模型的，基于 BN 层的 gamma 系数进行剪枝的。本项目用到的剪枝算法不限于 YOLOv3 模型，稍作改进理论上也是可以移植到其他目标检测模型的。
+本代码基于论文 [Learning Efficient Convolutional Networks Through Network Slimming (ICCV 2017)](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html) 进行改进实现的 channel pruning算法，类似的代码实现还有这个 [yolov3-network-slimming](https://github.com/talebolano/yolov3-network-slimming)。原始论文中的算法是针对分类模型的，基于 BN 层的 gamma 系数进行剪枝的。本项目用到的剪枝算法不限于 YOLOv3 模型，稍作改进理论上也是可以移植到其他目标检测模型的。
 
 ### 剪枝算法的步骤
 
@@ -77,9 +77,4 @@ python train.py --model_def config/yolov3-hand.cfg
    |  Prune (416)   |  10.9M  | 43.6MB  | 9.6B  |         7.7 ms        | 0.7722 |
    | Finetune (416) |   同上   | 同上    | 同上  |          同上         | 0.7750 |
 
-   > 加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致。将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。
-
-## Contact
-
-有问题可以直接提 Issue，也可以发邮箱 huifeng.lin at qq.com
-
+   > 加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致。将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。*需要明确的是，上面表格中剪枝的效果是只是针对该数据集的，不一定能保证在其他数据集上也有同样的效果*
