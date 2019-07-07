@@ -42,8 +42,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--sparsity-regularization', '-sr', dest='sr', action='store_true',
                         help='train with channel sparsity regularization')
-    parser.add_argument('--s', type=float, default=0.01, help='scale sparse rate')      # BN的gamma项的L1范数的惩罚系数
-    parser.add_argument('--alpha', type=float, default=0.1, help='gamma scale rate')    # gamma项的缩放系数
+    parser.add_argument('--s', type=float, default=0.01, help='scale sparse rate') 
+    parser.add_argument('--alpha', type=float, default=0.1, help='gamma scale rate')
 
     opt = parser.parse_args()
     print(opt)
