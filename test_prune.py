@@ -49,7 +49,6 @@ print(f'Threshold should be less than {highest_thre:.4f}.')
 print(f'The corresponding prune ratio is {percent_limit:.3f}.')
 
 #%%
-# 用这个来测试合适的剪枝百分比，0则使用默认剪枝
 def prune_and_eval(model, sorted_bn, percent=.0):
     model_copy = deepcopy(model)
     thre_index = int(len(sorted_bn) * percent)
@@ -66,7 +65,6 @@ def prune_and_eval(model, sorted_bn, percent=.0):
 
         remain_num += int(mask.sum())
         bn_module.weight.data.mul_(mask)
-        # bn_module.bias.data.mul_(mask)
 
     mAP = eval_model(model_copy)[2].mean()
 
@@ -83,8 +81,8 @@ def obtain_filters_mask(model, thre, CBL_idx, prune_idx):
 
     pruned = 0
     total = 0
-    num_filters = []  # 与CBL_idx对应的BN卷积层剪枝后的的滤波器个数
-    filters_mask = []  # 与CBL_idx对应的BN卷积层的滤波器的mask
+    num_filters = []
+    filters_mask = []
     for idx in CBL_idx:
         bn_module = model.module_list[idx][1]
         if idx in prune_idx:
@@ -119,13 +117,12 @@ CBLidx2mask = {idx: mask for idx, mask in zip(CBL_idx, filters_mask)}
 
 pruned_model = prune_model_keep_size(model, prune_idx, CBL_idx, CBLidx2mask)
 
-# 吸收beta项后得到的模型，会与上面prune_and_eval得到的结果有所差别(由于padding的存在)
 eval_model(pruned_model)
 
 
 #%%
-compact_module_defs = deepcopy(model.module_defs)  # 一定要deepcopy，因为里面的字典是可变对象
-for idx, num in zip(CBL_idx, num_filters):  # 修改CBN层的滤波器的个数
+compact_module_defs = deepcopy(model.module_defs)
+for idx, num in zip(CBL_idx, num_filters):
     assert compact_module_defs[idx]['type'] == 'convolutional'
     compact_module_defs[idx]['filters'] = str(num)
 
@@ -136,7 +133,6 @@ compact_nparameters = obtain_num_parameters(compact_model)
 init_weights_from_loose_model(compact_model, pruned_model, CBL_idx, Conv_idx, CBLidx2mask)
 
 #%%
-# 生成随机输入，通过比较输出来测试权重的赋值是否出错
 random_input = torch.rand((1, 3, model.img_size, model.img_size)).to(device)
 
 def obtain_avg_forward_time(input, model, repeat=200):
@@ -153,7 +149,6 @@ def obtain_avg_forward_time(input, model, repeat=200):
 pruned_forward_time, pruned_output = obtain_avg_forward_time(random_input, pruned_model)
 compact_forward_time, compact_output = obtain_avg_forward_time(random_input, compact_model)
 
-# 检验两个模型的输出是否一致
 diff = (pruned_output-compact_output).abs().gt(0.001).sum().item()
 if diff > 0:
     print('Something wrong with the pruned model!')
