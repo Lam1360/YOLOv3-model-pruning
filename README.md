@@ -10,7 +10,7 @@ Python3.6, Pytorch 1.0及以上
 
 YOLOv3 的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) ，因此代码的依赖环境也可以参考其 repo
 
-*目前部分代码(如prune_utils.py文件)还在修改和完善，最近比较忙，待整理好再发出来*
+**目前部分代码(如prune_utils.py文件)还在修改未上传到github，该 repo 中的代码目前尚不能运行，待整理好后再发出来**
 
 ## 数据集准备
 
