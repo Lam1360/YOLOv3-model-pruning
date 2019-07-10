@@ -10,7 +10,7 @@ Python3.6, Pytorch 1.0及以上
 
 YOLOv3 的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) ，因此代码的依赖环境也可以参考其 repo
 
-**目前部分代码(如prune_utils.py文件)还在修改未上传到github，该 repo 中的代码目前尚不能运行，待整理好后再发出来**
+**目前部分代码(如prune_utils.py文件)还在修改未上传到github，该 repo 中的代码目前尚不能进行训练（可进行测试），待整理好后再发出来**
 
 ## 数据集准备
 
@@ -69,12 +69,19 @@ python train.py --model_def config/yolov3-hand.cfg
    ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628205342.png)
    > 部分卷积层的通道数大幅度减少
 
-2. 剪枝前后指标对比:
+2. 剪枝前后指标对比：
 
    |                | 参数数量 | 模型体积 |Flops | 前向推断耗时（2070 TI） |  mAP   |
    | :------------: | :------:| :-----: | :---: | :-------------------: | :----: |
    | Baseline (416) |  61.5M  | 246.4MB |32.8B  |         15.0 ms       | 0.7692 |
    |  Prune (416)   |  10.9M  | 43.6MB  | 9.6B  |         7.7 ms        | 0.7722 |
    | Finetune (416) |   同上   | 同上    | 同上  |          同上         | 0.7750 |
-
+   
    > 加入稀疏正则项之后，mAP 反而更高了（在实验过程中发现，其实 mAP上下波动 0.02 是正常现象），因此可以认为稀疏训练得到的 mAP 与正常训练几乎一致。将 prune 后得到的模型进行 finetune 并没有明显的提升，因此剪枝三步可以直接简化成两步。剪枝前后模型的参数量、模型大小降为原来的 1/6 ，FLOPs 降为原来的 1/3，前向推断的速度可以达到原来的 2 倍，同时可以保持 mAP 基本不变。*需要明确的是，上面表格中剪枝的效果是只是针对该数据集的，不一定能保证在其他数据集上也有同样的效果*
+   
+3. 剪枝后模型的测试：
+
+   Prune 模型的权重已放在百度网盘上 （[提取码: gnzx](https://pan.baidu.com/s/13Ycj7JccBHWYF590bgFRxQ)），可以通过执行以下代码进行测试：
+   ```bash
+   python test.py --model_def config/prune_yolov3-hand.cfg --weights_path weights/prune_yolov3_ckpt.pth --data_config config/oxfordhand.data --class_path data/oxfordhand.names --conf_thres 0.01
+   ```
