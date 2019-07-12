@@ -16,7 +16,7 @@ YOLOv3 的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.co
 
 1. 下载[数据集](http://www.robots.ox.ac.uk/~vgg/data/hands/downloads/hand_dataset.tar.gz)，得到压缩文件
 2. 将压缩文件解压到 data 目录，得到 hand_dataset 文件夹
-3. 在 data 目录下执行 converter.py，生成 images、labels 文件夹和 train.txt、valid.txt 文件。训练集中一共有 4087 张图
+3. 在 data 目录下执行 converter.py，生成 images、labels 文件夹和 train.txt、valid.txt 文件。训练集中一共有 4807 张图
    片，测试集中一共有 821 张图片
 
 ## 正常训练（Baseline）
