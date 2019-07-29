@@ -43,7 +43,6 @@ if __name__ == "__main__":
     parser.add_argument('--sparsity-regularization', '-sr', dest='sr', action='store_true',
                         help='train with channel sparsity regularization')
     parser.add_argument('--s', type=float, default=0.01, help='scale sparse rate') 
-    parser.add_argument('--alpha', type=float, default=0.1, help='gamma scale rate')
 
     opt = parser.parse_args()
     print(opt)
@@ -126,8 +125,6 @@ if __name__ == "__main__":
 
         sr_flag = get_sr_flag(epoch, opt.sr)
 
-        scale_gammas(sr_flag, opt.alpha, model, prune_idx, scale_down=True)
-
         for batch_i, (_, imgs, targets) in enumerate(dataloader):
             batches_done = len(dataloader) * epoch + batch_i
 
@@ -180,8 +177,6 @@ if __name__ == "__main__":
             tensorboard_log += [("lr", optimizer.param_groups[0]['lr'])]
             logger.list_of_scalars_summary('train', tensorboard_log, batches_done)
 
-        scale_gammas(sr_flag, opt.alpha, model, prune_idx, scale_down=False)
-
         if epoch % opt.evaluation_interval == 0:
             print("\n---- Evaluating Model ----")
             # Evaluate the model on the validation set
@@ -210,20 +205,8 @@ if __name__ == "__main__":
             print(f"---- mAP {AP.mean()}")
 
             # 往tensorboard中记录bn权重分布
-            # if opt.sr:
             bn_weights = gather_bn_weights(model.module_list, prune_idx)
             logger.writer.add_histogram('bn_weights/hist', bn_weights.numpy(), epoch, bins='doane')
-
-            # 记录特定BN层的weight系数的变化,注意不是分布
-            for i in (0, 2, 72, 75, 80):
-                bn_weights_dict = {str(idx):float(weight) for idx, weight in enumerate(model.module_list[i][1].weight.data.abs()[:16])}
-                logger.writer.add_scalars(f'bn_weights/bn{i}_weight_group', bn_weights_dict, epoch)
-
-            # 记录BN权重的分位点
-            num_quantile = 5
-            quantiles = obtain_quantiles(bn_weights, num_quantile)
-            bn_quantiles_dict = {str(i+1): quantiles[i] for i in range(len(quantiles))}
-            logger.writer.add_scalars(f'bn_weights/quantiles5', bn_quantiles_dict, epoch)
 
         if epoch % opt.checkpoint_interval == 0 or epoch == opt.epochs - 1:
             torch.save(model.state_dict(), f"checkpoints/yolov3_ckpt_{epoch}_{timestamp}.pth")
