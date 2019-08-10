@@ -27,6 +27,8 @@ python train.py --model_def config/yolov3-hand.cfg
 
 ### 剪枝算法的大概步骤
 
+以下只是算法的大概步骤，具体实现过程中还要做 s 参数的尝试或者需要进行迭代式剪枝等。
+
 1. 进行稀疏化训练
 
    ```bash
@@ -39,7 +41,6 @@ python train.py --model_def config/yolov3-hand.cfg
    ```bash
    python train.py --model_def config/prune_yolov3-hand.cfg -pre checkpoints/prune_yolov3_ckpt.pth
    ```
-以上只是算法的大概步骤，具体实现过程中还要做 s 参数的尝试或者进行迭代式剪枝等。
 
 ### 剪枝前后的对比
 
