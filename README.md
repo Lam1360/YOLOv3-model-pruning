@@ -1,6 +1,6 @@
 # YOLOv3-model-pruning
 
-用 YOLOv3 模型在一个开源的人手检测数据集 [oxford hand](http://www.robots.ox.ac.uk/~vgg/data/hands/) 上做人手检测，并在此基础上做模型剪枝。对于该数据集，对 YOLOv3 进行 channel pruning 之后，模型的参数量、模型大小减少 80% ，FLOPs 降低 70%，前向推断的速度可以达到原来的 200%，同时可以保持 mAP 基本不变（*这个效果只是针对该数据集的，不一定能保证在其他数据集上也有同样的效果*，之后有时间的话会在其他数据集上进行测试）。
+用 YOLOv3 模型在一个开源的人手检测数据集 [oxford hand](http://www.robots.ox.ac.uk/~vgg/data/hands/) 上做人手检测，并在此基础上做模型剪枝。对于该数据集，对 YOLOv3 进行 channel pruning 之后，模型的参数量、模型大小减少 80% ，FLOPs 降低 70%，前向推断的速度可以达到原来的 200%，同时可以保持 mAP 基本不变（***这个效果只是针对该数据集的，不一定能保证在其他数据集上也有同样的效果***）。
 
 感兴趣的可以给个 star :star2:，也欢迎提 Issue 一起讨论 :smile:
 
@@ -9,8 +9,6 @@
 Python3.6, Pytorch 1.0及以上
 
 YOLOv3 的实现参考了 eriklindernoren 的 [PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) ，因此代码的依赖环境也可以参考其 repo
-
-**目前部分代码(如prune_utils.py文件)还在修改未上传到github，该 repo 中的代码目前尚不能进行训练（可进行测试），待整理好后再发出来**
 
 ## 数据集准备
 
@@ -39,8 +37,7 @@ python train.py --model_def config/yolov3-hand.cfg
 
 2. 基于 test_prune.py 文件进行剪枝（通过设定合理的剪枝规则），得到剪枝后的模型
 
-3. 对剪枝后的模型进行微调（本项目对原算法进行了改进，实验过程中发现即使不经过微调也能达到较高的 mAP）
-
+3. 对剪枝后的模型进行微调
    ```bash
    python train.py --model_def config/prune_yolov3-hand.cfg -pre checkpoints/prune_yolov3_ckpt.pth
    ```
