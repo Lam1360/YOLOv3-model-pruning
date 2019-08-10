@@ -2,8 +2,6 @@
 
 用 YOLOv3 模型在一个开源的人手检测数据集 [oxford hand](http://www.robots.ox.ac.uk/~vgg/data/hands/) 上做人手检测，并在此基础上做模型剪枝。对于该数据集，对 YOLOv3 进行 channel pruning 之后，模型的参数量、模型大小减少 80% ，FLOPs 降低 70%，前向推断的速度可以达到原来的 200%，同时可以保持 mAP 基本不变（***这个效果只是针对该数据集的，不一定能保证在其他数据集上也有同样的效果***）。
 
-感兴趣的可以给个 star :star2:，也欢迎提 Issue 一起讨论 :smile:
-
 ## 环境
 
 Python3.6, Pytorch 1.0及以上
@@ -25,9 +23,9 @@ python train.py --model_def config/yolov3-hand.cfg
 
 ## 剪枝算法介绍
 
-本代码基于论文 [Learning Efficient Convolutional Networks Through Network Slimming (ICCV 2017)](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html) 进行改进实现的 channel pruning算法，类似的代码实现还有这个 [yolov3-network-slimming](https://github.com/talebolano/yolov3-network-slimming)。原始论文中的算法是针对分类模型的，基于 BN 层的 gamma 系数进行剪枝的。本项目用到的剪枝算法不限于 YOLOv3 模型，稍作改进理论上也是可以移植到其他目标检测模型的。
+本代码基于论文 [Learning Efficient Convolutional Networks Through Network Slimming (ICCV 2017)](http://openaccess.thecvf.com/content_iccv_2017/html/Liu_Learning_Efficient_Convolutional_ICCV_2017_paper.html) 进行改进实现的 channel pruning算法，类似的代码实现还有这个 [yolov3-network-slimming](https://github.com/talebolano/yolov3-network-slimming)。原始论文中的算法是针对分类模型的，基于 BN 层的 gamma 系数进行剪枝的。
 
-### 剪枝算法的步骤
+### 剪枝算法的大概步骤
 
 1. 进行稀疏化训练
 
@@ -35,29 +33,13 @@ python train.py --model_def config/yolov3-hand.cfg
    python train.py --model_def config/yolov3-hand.cfg -sr --s 0.01
    ```
 
-2. 基于 test_prune.py 文件进行剪枝（通过设定合理的剪枝规则），得到剪枝后的模型
+2. 基于 test_prune.py 文件进行剪枝，得到剪枝后的模型
 
 3. 对剪枝后的模型进行微调
    ```bash
    python train.py --model_def config/prune_yolov3-hand.cfg -pre checkpoints/prune_yolov3_ckpt.pth
    ```
-
-### 稀疏训练过程的可视化
-
-1. 所有 BN 的 gamma 系数的五个五分位点随时间的变化图：
-
-   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202900.png)
-   > 经过 10 次迭代后，60%的 gamma 系数已趋向于 0，40 次迭代后 80% 的 gamma 系数已趋向于 0
-
-2. YOLOv3中第一个 BN 层的 gamma 系数随迭代次数的变化情况：
-
-   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628202755.png)
-   > 随着模型的更新，部分 gamma 系数逐步趋向于 0（表明其重要性逐渐削弱），而部分 gamma 系数能够保持其权重（表明其对网络的输出有一定的重要性）
-
-3. 所有 BN 的 gamma 系数的分布随迭代次数的变化：
-
-   ![](https://raw.githubusercontent.com/Lam1360/md-image/master/img/20190628203732.png)
-   > 分布的重心逐渐向 0 靠近，但并没有全部衰减为 0，表明 gamma 系数逐渐变得稀疏
+以上只是算法的大概步骤，具体实现过程中还要做 s 参数的尝试或者进行迭代式剪枝等。
 
 ### 剪枝前后的对比
 
